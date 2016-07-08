@@ -1,0 +1,64 @@
+import tensorflow as tf
+
+import tensorflow.contrib.slim as slim
+from mnist import inputs, lenet
+
+flags = tf.app.flags
+flags.DEFINE_string('train_dir', '/tmp/data',
+                    'Directory with the training data.')
+flags.DEFINE_integer('batch_size', 5, 'Batch size.')
+flags.DEFINE_integer('num_batches', 1000, 'Num of batches to evaluate.')
+flags.DEFINE_string('log_dir', './log',
+                    'Directory with the log data.')
+flags.DEFINE_string('checkpoint_dir', None,
+                    'Directory with the model checkpoint data.')
+FLAGS = flags.FLAGS
+
+def aggregate_metric_map(metric_map):
+    metric_to_value = {}
+    metric_to_update = {}
+    for metric_name, metric in metric_map.iteritems():
+        value, update = metric
+        metric_to_value['metric_name'] = value
+        metric_to_update['metric_name'] = update
+
+    return metric_to_value, metric_to_update
+
+
+def main(train_dir, batch_size, num_batches, log_dir, checkpoint_dir=None):
+    if checkpoint_dir is None:
+        checkpoint_dir = log_dir
+
+    images, labels = inputs(train_dir, False, batch_size, num_batches)
+    predictions = lenet(images)
+
+    import pdb
+    pdb.set_trace()
+
+    # Choose the metrics to compute:
+    metrics_to_values, metrics_to_updates = aggregate_metric_map({
+        "accuracy": slim.metrics.accuracy(predictions, labels),
+        "mse": slim.metrics.mean_squared_error(predictions, labels),
+    })
+
+    # Define the summaries to write:
+    for metric_name, metric_value in metrics_to_values.iteritems():
+        tf.scalar_summary(metric_name, metric_value)
+
+    # Evaluate every 30 seconds
+    slim.evaluation_loop(
+        '',
+        checkpoint_dir,
+        log_dir,
+        num_evals=num_batches,
+        eval_op=metrics_to_updates.values(),
+        summary_op=tf.merge_all_summaries(),
+        eval_interval_secs=30)
+
+
+if __name__=='__main__':
+    main(FLAGS.train_dir,
+         FLAGS.batch_size,
+         FLAGS.num_batches,
+         FLAGS.log_dir,
+         FLAGS.checkpoint_dir)
