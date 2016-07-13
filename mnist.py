@@ -44,12 +44,11 @@ def read_and_decode(filename_queue):
     # into a vector, we don't bother.
 
     # Convert label from a scalar uint8 tensor to an int32 scalar.
-    # label = tf.cast(features['label'], tf.int32)
-    label = tf.one_hot(label, mnist.NUM_CLASSES, dtype=tf.int32)
+    label = tf.cast(features['label'], tf.int32)
 
     return image, label
 
-def inputs(train_dir, train, batch_size, num_epochs):
+def inputs(train_dir, train, batch_size, num_epochs, one_hot_labels=False):
     """Reads input data num_epochs times.
     Args:
         train: Selects between the training (True) and validation (False) data.
@@ -69,9 +68,6 @@ def inputs(train_dir, train, batch_size, num_epochs):
     filename = os.path.join(train_dir,
                             TRAIN_FILE if train else VALIDATION_FILE)
 
-    import pdb
-    pdb.set_trace()
-
     with tf.name_scope('input'):
         filename_queue = tf.train.string_input_producer(
             [filename], num_epochs=num_epochs)
@@ -79,6 +75,9 @@ def inputs(train_dir, train, batch_size, num_epochs):
         # Even when reading in multiple threads, share the filename
         # queue.
         image, label = read_and_decode(filename_queue)
+
+        if one_hot_labels:
+            label = tf.one_hot(label, mnist.NUM_CLASSES, dtype=tf.int32)
 
         # Shuffle the examples and collect them into batch_size batches.
         # (Internally uses a RandomShuffleQueue.)

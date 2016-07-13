@@ -7,13 +7,17 @@ flags.DEFINE_string('train_dir', '/tmp/data',
                     'Directory with the training data.')
 flags.DEFINE_integer('batch_size', 5, 'Batch size.')
 flags.DEFINE_integer('num_batches', 1000, 'Num of batches to train (epochs).')
-flags.DEFINE_string('log_dir', './log',
+flags.DEFINE_string('log_dir', './log/train',
                     'Directory with the log data.')
 FLAGS = flags.FLAGS
 
 
 def main(train_dir, batch_size, num_batches, log_dir):
-    images, labels = inputs(train_dir, True, batch_size, num_batches)
+    images, labels = inputs(train_dir,
+                            True,
+                            batch_size,
+                            None,
+                            one_hot_labels=True)
     predictions = lenet(images)
 
     slim.losses.softmax_cross_entropy(predictions, labels)
