@@ -48,6 +48,7 @@ def read_and_decode(filename_queue):
 
     return image, label
 
+
 def inputs(train_dir, train, batch_size, num_epochs, one_hot_labels=False):
     """Reads input data num_epochs times.
     Args:
