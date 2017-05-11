@@ -33,7 +33,7 @@ def main(train_dir, batch_size, num_batches, log_dir, checkpoint_dir=None):
 
     # Define the streaming summaries to write:
     for metric_name, metric_value in metrics_to_values.iteritems():
-        tf.scalar_summary(metric_name, metric_value)
+        tf.summary.scalar(metric_name, metric_value)
 
     # Evaluate every 30 seconds
     slim.evaluation.evaluation_loop(
