@@ -1,12 +1,13 @@
 import sys
 
 import tensorflow as tf
-import tensorflow.contrib.slim as slim
-from model import lenet
 from datasets import mnist
+from model import lenet, load_batch
+
+slim = tf.contrib.slim
 
 flags = tf.app.flags
-flags.DEFINE_string('data_dir', '/tmp/data',
+flags.DEFINE_string('data_dir', '/tmp/mnist',
                     'Directory with the mnist data.')
 flags.DEFINE_integer('batch_size', 5, 'Batch size.')
 flags.DEFINE_integer('num_batches', None,
@@ -19,33 +20,36 @@ FLAGS = flags.FLAGS
 def main(args):
     # load the dataset
     dataset = mnist.get_split('train', FLAGS.data_dir)
-    # load the examples in parallel
-    data_provider = slim.dataset_data_provider.DatasetDataProvider(dataset)
-    image, label = data_provider.get(['image', 'label'])
-    # batch the examples
-    images, labels = tf.train.batch(
-        [image, label],
-        batch_size=FLAGS.batch_size,
-        allow_smaller_final_batch=True)
+
+    # load batch of dataset
+    images, labels = load_batch(
+        dataset,
+        FLAGS.batch_size,
+        is_training=True)
 
     # run the image through the model
     predictions = lenet(images)
+
     # get the cross-entropy loss
     one_hot_labels = slim.one_hot_encoding(
         labels,
         dataset.num_classes)
     slim.losses.softmax_cross_entropy(
         predictions,
-        labels)
+        one_hot_labels)
     total_loss = slim.losses.get_total_loss()
     tf.summary.scalar('loss', total_loss)
 
+    # use RMSProp to optimize
     optimizer = tf.train.RMSPropOptimizer(0.001, 0.9)
+
+    # create train op
     train_op = slim.learning.create_train_op(
         total_loss,
         optimizer,
         summarize_gradients=True)
 
+    # run training
     slim.learning.train(
         train_op,
         FLAGS.log_dir,
@@ -53,4 +57,4 @@ def main(args):
 
 
 if __name__ == '__main__':
-    tf.app.run(argv=sys.argv)
+    tf.app.run(main=main, argv=sys.argv)
