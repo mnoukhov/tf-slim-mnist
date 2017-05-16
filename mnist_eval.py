@@ -1,5 +1,3 @@
-import sys
-
 import tensorflow as tf
 
 from datasets import mnist
@@ -60,4 +58,4 @@ def main(args):
 
 
 if __name__=='__main__':
-    tf.app.run(main=main, argv=sys.argv)
+    tf.app.run()

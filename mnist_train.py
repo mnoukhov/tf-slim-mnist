@@ -1,6 +1,5 @@
-import sys
-
 import tensorflow as tf
+
 from datasets import mnist
 from model import lenet, load_batch
 
@@ -57,4 +56,4 @@ def main(args):
 
 
 if __name__ == '__main__':
-    tf.app.run(main=main, argv=sys.argv)
+    tf.app.run()

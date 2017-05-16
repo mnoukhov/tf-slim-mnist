@@ -34,7 +34,14 @@ import numpy as np
 from six.moves import urllib
 import tensorflow as tf
 
-from datasets import dataset_utils
+import dataset_utils
+
+FLAGS = tf.app.flags.FLAGS
+
+tf.app.flags.DEFINE_string(
+    'dataset_dir',
+    '/tmp/mnist',
+    'The directory where the output TFRecords and temporary files are saved.')
 
 # The URLs where the MNIST data can be downloaded.
 _DATA_URL = 'http://yann.lecun.com/exdb/mnist/'
@@ -183,12 +190,14 @@ def _clean_up_temporary_files(dataset_dir):
     tf.gfile.Remove(filepath)
 
 
-def run(dataset_dir):
+def run(args):
   """Runs the download and conversion operation.
 
   Args:
     dataset_dir: The dataset directory where the dataset is stored.
   """
+  dataset_dir = FLAGS.dataset_dir
+
   if not tf.gfile.Exists(dataset_dir):
     tf.gfile.MakeDirs(dataset_dir)
 
@@ -219,3 +228,7 @@ def run(dataset_dir):
 
   _clean_up_temporary_files(dataset_dir)
   print('\nFinished converting the MNIST dataset!')
+
+
+if __name__ == '__main__':
+  tf.app.run(main=run)

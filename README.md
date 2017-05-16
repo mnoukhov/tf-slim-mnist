@@ -1,6 +1,9 @@
 # tf-slim-mnist
 MNIST tutorial with Tensorflow Slim (tf.contrib.slim) a lightweight library over Tensorflow, you can read more about it [here](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/slim) and [here](https://github.com/tensorflow/models/blob/master/slim/slim_walkthrough.ipynb) is a good ipython notebook about it
 
+**NOTE** recently updated! tensorflow slim functionality also seems to be moving to other contrib libraries, and if it completely disappears I'll update accordingly
+
+
 ## Setting up data
 run `python datasets/download_and_convert_mnist.py` to create [train, validation, test].tfrecords files containing MNIST data
 by default (unless you specify `--directory`) they will be put into /tmp/data
