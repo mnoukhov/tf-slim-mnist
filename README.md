@@ -1,7 +1,7 @@
 # tf-slim-mnist
 
 MNIST tutorial with Tensorflow Slim (tf.contrib.slim) a lightweight library over Tensorflow, you can read more about it [here](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/slim). 
-[Here](https://github.com/tensorflow/models/blob/master/slim/slim_walkthrough.ipynb) is a good iPython notebook about it.
+[Here](https://github.com/tensorflow/models/blob/master/research/slim/slim_walkthrough.ipynb) is a good iPython notebook about it.
 
 ## Setting up data
 
