@@ -1,3 +1,5 @@
+**DEPRECATED**: it seems that a lot of tf.slim functionality is being put into other places in Tensorflow and it isn't really being maintained that much anymore :disappointed: So I've created another repo focusing on `tf.Estimator` as the high-level library/abstraction. It is even smaller of a repo and I'm trying to make it as simple as possible to follow, so check it out! https://github.com/mnoukhov/tf-estimator-mnist 
+
 # tf-slim-mnist
 
 MNIST tutorial with Tensorflow Slim (tf.contrib.slim) a lightweight library over Tensorflow, you can read more about it [here](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/slim). 
